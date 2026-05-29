@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!-- Replace YOUR-DOMAIN.com before launch -->
+<title>USB Flash Drive Security — Best Practices and Risks</title>
+<meta content="A complete guide to USB flash drive security risks, best practices, encryption methods, and threat prevention. Protect your portable data today." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+
+:root {
+    --dark: #0A0A0A;
+    --dark-section: #111111;
+    --acid: #F5E642;
+    --content-bg: #FAFAFA;
+    --body-dark: #F5F5F0;
+    --body-light: #0A0A0A;
+    --muted-dark: rgba(245, 245, 240, 0.72);
+    --muted-light: rgba(10, 10, 10, 0.68);
+    --white-line: rgba(255, 255, 255, 0.9);
+    --border-dark: rgba(245, 230, 66, 0.35);
+    --border-light: rgba(10, 10, 10, 0.16);
+    --font-heading: 'Syne', system-ui, sans-serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --max-reading-width: 850px;
+    --max-wide-width: 1180px;
+    --section-padding-v: 88px;
+    --radius-card: 0;
+    --shadow-card: 12px 12px 0 rgba(10, 10, 10, 0.18);
+    --transition-speed: 0.18s;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body);
+    color: var(--body-light);
+    background: var(--content-bg);
+    line-height: 1.72;
+    font-size: 17px;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+body::selection { background: var(--acid); color: var(--dark); }
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    line-height: 0.98;
+    margin-bottom: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.055em;
+}
+h1 { font-size: clamp(44px, 7vw, 72px); color: var(--body-dark); max-width: 820px; }
+h2 { font-size: clamp(34px, 4vw, 52px); color: inherit; margin-top: 0; border: 0; padding-bottom: 0; }
+h3 { font-size: clamp(24px, 2.5vw, 34px); color: inherit; margin-top: 2rem; }
+h4 { font-size: 1.15rem; letter-spacing: -0.03em; }
+
+p { margin-bottom: 1.5rem; }
+ul, ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+li { margin-bottom: 0.5rem; }
+a { color: inherit; text-decoration-thickness: 0.08em; text-underline-offset: 0.18em; font-weight: 700; transition: color var(--transition-speed), background var(--transition-speed), border-color var(--transition-speed), filter var(--transition-speed), transform var(--transition-speed); }
+a:hover { color: var(--acid); }
+img, svg { max-width: 100%; height: auto; display: block; }
+
+.container-reading { max-width: var(--max-reading-width); margin: 0 auto; padding: 0 24px; }
+.container-wide { max-width: var(--max-wide-width); margin: 0 auto; padding: 0 24px; }
+section {
+    padding: var(--section-padding-v) 0;
+    position: relative;
+    isolation: isolate;
+    opacity: 0.8;
+    transform: translateY(18px);
+    transition: background 500ms ease, color 500ms ease, opacity 500ms ease, transform 500ms ease;
+}
+section.in-view { opacity: 1; transform: translateY(0); }
+section:nth-of-type(odd) { background: var(--content-bg); color: var(--body-light); }
+section:nth-of-type(even), .bg-alt { background: var(--dark-section); color: var(--body-dark); }
+section:nth-of-type(even) a, .bg-alt a { color: var(--acid); }
+section:nth-of-type(even) a:hover, .bg-alt a:hover { color: var(--body-dark); background: var(--acid); }
+
+.site-header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--dark);
+    color: var(--body-dark);
+    border-bottom: 1px solid var(--acid);
+    height: 74px;
+}
+.site-header .container-wide { display: flex; justify-content: space-between; align-items: center; height: 100%; }
+.site-wordmark, .footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-heading);
+    font-size: 1.02rem;
+    font-weight: 800;
+    color: inherit;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+}
+.brand-mark {
+    display: inline-grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    background: var(--acid);
+    border: 1px solid var(--acid);
+}
+.brand-mark svg { width: 31px; height: 31px; }
+.brand-shield { fill: var(--dark); }
+.brand-bolt { fill: var(--acid); stroke: var(--acid); stroke-width: 0.5px; }
+.brand-text { white-space: nowrap; }
+
+.nav-links { display: flex; gap: 22px; align-items: center; }
+.nav-links a {
+    font-size: 0.82rem;
+    color: var(--body-dark);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.nav-links a:hover { color: var(--acid); }
+.hamburger {
+    display: none; background: var(--acid); border: 1px solid var(--acid);
+    font-size: 1.5rem; cursor: pointer; color: var(--dark); width: 46px; height: 42px;
+}
+
+.btn-outline, .btn-filled, .btn-white, .btn-ghost {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 13px 22px;
+    border: 1px solid currentColor;
+    border-radius: 0;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    transition: background 100ms linear, color 100ms linear, border-color 100ms linear, transform 100ms linear;
+}
+.btn-outline, .btn-ghost { background: transparent; color: currentColor; }
+.btn-filled, .btn-white { background: var(--acid); color: var(--dark); border-color: var(--acid); }
+.btn-outline:hover, .btn-ghost:hover { background: var(--acid); color: var(--dark); border-color: var(--acid); transform: translate(-2px, -2px); }
+.btn-filled:hover, .btn-white:hover { background: var(--dark); color: var(--acid); border-color: var(--acid); transform: translate(-2px, -2px); }
+
+.ui-label {
+    display: inline-block;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 800;
+    color: inherit;
+    margin-bottom: 0.8rem;
+    border-bottom: 2px solid currentColor;
+}
+
+/* Hero split */
+.hero {
+    --split: 50%;
+    min-height: calc(100vh - 74px);
+    padding: 0;
+    background: linear-gradient(90deg, var(--dark) 0 var(--split), var(--white-line) var(--split) calc(var(--split) + 1px), var(--acid) calc(var(--split) + 1px) 100%);
+    color: var(--body-dark);
+    overflow: hidden;
+    opacity: 1;
+    transform: none;
+}
+.hero-split-wrap {
+    min-height: calc(100vh - 74px);
+    width: 100%;
+    max-width: none;
+    display: grid;
+    grid-template-columns: var(--split) 1fr;
+    padding: 0;
+}
+.hero-pane {
+    min-height: calc(100vh - 74px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(34px, 6vw, 90px);
+}
+.hero-pane-dark { color: var(--body-dark); }
+.hero-pane-yellow { color: var(--dark); align-items: flex-start; }
+.breadcrumb {
+    font-size: 0.78rem;
+    color: var(--muted-dark);
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 800;
+}
+.meta-bar {
+    font-size: 0.9rem;
+    color: var(--muted-dark);
+    margin-top: 0.6rem;
+    margin-bottom: 0;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.quick-answer {
+    background: var(--acid);
+    color: var(--dark);
+    border: 2px solid var(--dark);
+    padding: clamp(24px, 4vw, 42px);
+    margin: 0 0 2rem;
+    box-shadow: 12px 12px 0 var(--dark);
+    max-width: 640px;
+}
+.quick-answer p { margin-bottom: 0; }
+.hero-image {
+    max-width: 620px;
+    border: 2px solid var(--dark);
+    box-shadow: 12px 12px 0 var(--dark);
+    background: var(--acid);
+}
+
+/* Images */
+.content-image {
+    margin: 2rem 0;
+    overflow: hidden;
+    border: 2px solid currentColor;
+    background: transparent;
+    box-shadow: 10px 10px 0 currentColor;
+}
+.content-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    background: transparent;
+}
+.card-image {
+    margin: 1rem 0 1.25rem;
+    box-shadow: none;
+    border-width: 1px;
+}
+.card-image img { max-height: 210px; object-fit: contain; }
+.method-image img { max-height: 360px; object-fit: contain; }
+.product-shot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    gap: 22px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.product-shot {
+    margin: 0;
+    border: 1px solid rgba(245, 230, 66, 0.5);
+    box-shadow: none;
+    background: rgba(245, 230, 66, 0.08);
+}
+.product-shot img { max-height: 260px; object-fit: contain; padding: 12px; }
+.dashboard-image { width: 100%; box-shadow: none; border-color: rgba(245, 230, 66, 0.45); }
+.dashboard-image img { max-height: 380px; object-fit: contain; }
+
+.toc-card, .quiz-container, .matrix-card, .pricing-builder, .faq-card, table, .testimonial-band {
+    border: 2px solid currentColor;
+    box-shadow: 10px 10px 0 currentColor;
+}
+
+/* TOC */
+.toc-card {
+    background: var(--acid);
+    color: var(--dark);
+    padding: 32px;
+    margin: 0 0 2rem;
+}
+.toc-card ol { margin: 0; padding-left: 1.5rem; font-family: var(--font-heading); font-size: 1.08rem; }
+.toc-card a { color: var(--dark); text-decoration: none; }
+.toc-card a:hover { color: var(--dark); background: var(--body-dark); }
+
+/* Intent */
+.intent-widget { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 2rem; }
+.intent-btn {
+    padding: 11px 18px;
+    border: 2px solid var(--dark);
+    background: var(--content-bg);
+    color: var(--dark);
+    border-radius: 0;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    transition: var(--transition-speed);
+}
+.intent-btn:hover, .intent-btn.active { background: var(--dark); color: var(--acid); border-color: var(--dark); }
+.intent-content { display: none; animation: fadeIn 0.3s ease; border-left: 8px solid var(--acid); padding-left: 20px; }
+.intent-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Matrix and duotone cards */
+.matrix-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 26px; margin: 2rem 0; }
+.matrix-card {
+    padding: 24px;
+    transition: filter 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+}
+.matrix-card:nth-child(odd) { background: var(--dark); color: var(--body-dark); border-color: var(--acid); box-shadow: 10px 10px 0 var(--acid); }
+.matrix-card:nth-child(even) { background: var(--acid); color: var(--dark); border-color: var(--dark); box-shadow: 10px 10px 0 var(--dark); }
+.matrix-card:hover:nth-child(odd) { filter: brightness(1.25); transform: translate(-4px, -4px); }
+.matrix-card:hover:nth-child(even) { filter: brightness(0.88); transform: translate(-4px, -4px); }
+.matrix-card h4 { border-bottom: 2px solid currentColor; padding-bottom: 0.7rem; }
+
+/* Quiz */
+.quiz-container { background: var(--content-bg); color: var(--dark); padding: 32px; margin: 2rem 0; }
+.quiz-question { margin-bottom: 1rem; font-weight: 800; text-transform: uppercase; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-options label { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid var(--border-light); transition: 0.2s; }
+.quiz-options label:hover { background: var(--acid); }
+.quiz-options input { width: 18px; height: 18px; accent-color: var(--dark); }
+#quiz-result { margin-top: 1.5rem; padding: 16px; font-weight: 700; display: none; border: 2px solid currentColor; }
+
+/* Difficulty */
+.diff-viz { display: flex; align-items: center; gap: 12px; margin: 12px 0 22px; font-size: 0.9rem; text-transform: uppercase; font-weight: 800; }
+.diff-bars { display: flex; gap: 4px; }
+.diff-bar { height: 7px; width: 28px; background: rgba(10,10,10,0.16); border: 1px solid currentColor; }
+.diff-bar.fill-high, .diff-bar.fill-med, .diff-bar.fill-low { background: var(--acid); }
+
+/* Comparison table */
+.comp-table-wrapper { overflow-x: auto; margin: 2rem 0; border: 2px solid var(--dark); box-shadow: 10px 10px 0 var(--acid); }
+table { width: 100%; border-collapse: collapse; background: var(--content-bg); color: var(--dark); box-shadow: none; border: 0; overflow: hidden; }
+th, td { padding: 17px 20px; text-align: left; border-bottom: 1px solid var(--border-light); vertical-align: top; }
+th { background: var(--dark); color: var(--acid); font-family: var(--font-heading); text-transform: uppercase; letter-spacing: -0.02em; }
+.table-group-header { background: var(--acid); color: var(--dark); font-weight: 800; font-family: var(--font-heading); text-transform: uppercase; }
+tr:last-child td { border-bottom: none; }
+
+/* How it works / definition list */
+.def-list { margin: 2rem 0; border-top: 2px solid currentColor; }
+.def-item { display: grid; grid-template-columns: minmax(160px, 30%) 1fr; gap: 24px; padding: 1rem 0; border-bottom: 2px solid currentColor; }
+.def-term { font-weight: 800; font-family: var(--font-heading); font-size: 1.05rem; color: inherit; margin-bottom: 0; text-transform: uppercase; line-height: 1.1; }
+.def-desc { color: inherit; }
+#guide h3 {
+    display: grid;
+    grid-template-columns: minmax(130px, 0.38fr) 1fr;
+    gap: 28px;
+    align-items: stretch;
+    border: 2px solid currentColor;
+    margin-top: 3rem;
+    background: var(--content-bg);
+    color: var(--dark);
+}
+#guide h3::before {
+    content: counter(step-counter, decimal-leading-zero);
+    counter-increment: step-counter;
+    display: grid;
+    place-items: center;
+    background: var(--dark);
+    color: var(--acid);
+    padding: 18px;
+    font-size: 42px;
+    letter-spacing: -0.08em;
+}
+#guide { counter-reset: step-counter; }
+
+/* SaaS/recommendation */
+.saas-moment {
+    background: var(--dark);
+    color: var(--body-dark);
+    text-align: center;
+    overflow: hidden;
+}
+.saas-moment::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, rgba(245,230,66,0.08) 0 1px, transparent 1px 80px);
+    z-index: -1;
+}
+.saas-moment h2, .saas-moment h3 { color: var(--body-dark); border: 0; }
+.saas-moment .meta-text { color: var(--muted-dark); font-size: 1.1rem; max-width: 680px; margin: 0 auto 2rem; }
+.saas-mockup {
+    background: #050505;
+    border: 2px solid var(--acid);
+    padding: 34px;
+    max-width: 920px;
+    margin: 3rem auto 0;
+    box-shadow: 16px 16px 0 var(--acid);
+    display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;
+}
+.saas-chip {
+    background: var(--acid);
+    color: var(--dark);
+    padding: 12px 18px;
+    font-size: 0.84rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: 1px solid var(--acid);
+}
+.saas-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* Pricing */
+.pricing-builder {
+    background: var(--dark);
+    color: var(--body-dark);
+    padding: 34px;
+    margin: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px;
+    border-color: var(--acid);
+    box-shadow: 12px 12px 0 var(--acid);
+}
+.pricing-checks { flex: 1; min-width: 250px; }
+.pricing-checks label { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; cursor: pointer; }
+.pricing-checks input { accent-color: var(--acid); margin-top: 4px; }
+.pricing-result {
+    flex: 1;
+    min-width: 250px;
+    background: var(--acid);
+    color: var(--dark);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 2px solid var(--dark);
+}
+.plan-badge {
+    display: inline-block;
+    padding: 7px 12px;
+    background: var(--dark) !important;
+    color: var(--acid);
+    font-size: 0.78rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+/* Testimonials */
+.testimonial-band {
+    background: var(--acid);
+    color: var(--dark);
+    padding: 32px;
+    margin: 1.5rem 0;
+    border-left: 14px solid var(--dark);
+}
+.testimonial-quote { font-family: var(--font-heading); font-size: 1.25rem; color: inherit; font-style: normal; margin-bottom: 1rem; line-height: 1.2; }
+.testimonial-author { font-size: 0.9rem; font-weight: 800; color: inherit; text-transform: uppercase; }
+
+/* FAQ */
+.faq-controls { display: flex; gap: 12px; margin-bottom: 2rem; flex-wrap: wrap; }
+.faq-filter {
+    padding: 9px 15px;
+    border: 2px solid currentColor;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.86rem;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+.faq-filter.active, .faq-filter:hover { background: var(--acid); color: var(--dark); border-color: var(--acid); }
+.faq-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; align-items: start; }
+.faq-card {
+    background: var(--dark);
+    color: var(--body-dark);
+    border-color: var(--acid);
+    box-shadow: 10px 10px 0 var(--acid);
+    padding: 24px;
+    transition: 0.3s;
+}
+.faq-card:nth-child(even) { background: var(--acid); color: var(--dark); border-color: var(--dark); box-shadow: 10px 10px 0 var(--dark); }
+.faq-card.hidden { display: none; }
+.faq-card h3 { font-size: 1.1rem; margin-top: 0; margin-bottom: 0.75rem; }
+.faq-card p { margin-bottom: 0; }
+
+/* Contrast band signature */
+.contrast-band {
+    margin: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    border: 2px solid var(--dark);
+    box-shadow: 14px 14px 0 var(--acid);
+    overflow: hidden;
+}
+.contrast-band p {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    font-family: var(--font-heading);
+    font-size: clamp(38px, 7vw, 96px);
+    font-weight: 800;
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: -0.07em;
+}
+.contrast-band .band-word {
+    padding: 0.18em 0.22em 0.24em;
+    display: inline-block;
+}
+.contrast-band .band-word:nth-child(odd) { background: var(--dark); color: var(--body-dark); }
+.contrast-band .band-word:nth-child(even) { background: var(--acid); color: var(--dark); }
+
+/* Footer */
+.site-footer {
+    background: var(--dark);
+    color: var(--muted-dark);
+    padding: 64px 0 34px;
+    font-size: 0.9rem;
+    border-top: 1px solid var(--acid);
+}
+.site-footer a { color: var(--body-dark); }
+.site-footer a:hover { color: var(--acid); }
+.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 40px; margin-bottom: 40px; }
+.footer-brand { color: var(--body-dark); margin-bottom: 1rem; }
+.footer-disclosure { border-top: 1px solid rgba(245,230,66,0.28); padding-top: 24px; font-size: 0.8rem; }
+
+/* Word split entrance */
+.word-split {
+    display: inline-flex;
+    overflow: hidden;
+    vertical-align: bottom;
+    margin-right: 0.18em;
+}
+.word-split .half {
+    display: inline-block;
+    transform: translateX(0);
+    transition: transform 650ms cubic-bezier(.2,.8,.2,1), opacity 650ms ease;
+}
+.word-split .half-left { transform: translateX(-110%); opacity: 0; }
+.word-split .half-right { transform: translateX(110%); opacity: 0; }
+.in-view .word-split .half { transform: translateX(0); opacity: 1; }
+
+@media (max-width: 980px) {
+    .nav-links { gap: 14px; }
+    .nav-links a:not(.btn-outline) { display: none; }
+    .hero-pane { padding: 44px 26px; }
+    .hero-split-wrap { grid-template-columns: 1fr; grid-template-rows: minmax(48vh, auto) minmax(48vh, auto); }
+    .hero {
+        background: linear-gradient(180deg, var(--dark) 0 50%, var(--white-line) 50% calc(50% + 1px), var(--acid) calc(50% + 1px) 100%);
+    }
+    .hero-pane { min-height: auto; }
+}
+@media (max-width: 768px) {
+    body { font-size: 16px; }
+    section { padding: 62px 0; }
+    .site-header { height: 66px; }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 66px;
+        left: 0;
+        width: 100%;
+        background: var(--dark);
+        color: var(--body-dark);
+        flex-direction: column;
+        padding: 24px;
+        border-bottom: 1px solid var(--acid);
+        align-items: stretch;
+    }
+    .nav-links.active { display: flex; }
+    .nav-links a:not(.btn-outline) { display: block; }
+    .hamburger { display: grid; place-items: center; }
+    .matrix-grid, .faq-grid { grid-template-columns: 1fr; }
+    .saas-actions { flex-direction: column; }
+    .def-item { grid-template-columns: 1fr; gap: 8px; }
+    #guide h3 { grid-template-columns: 1fr; }
+    #guide h3::before { font-size: 32px; justify-content: start; }
+    .word-split .half-left, .word-split .half-right {
+        transform: translateY(16px);
+    }
+    .product-shot-grid { grid-template-columns: 1fr; }
+    .quick-answer, .hero-image, .toc-card, .quiz-container, .matrix-card, .pricing-builder, .faq-card, .content-image, .contrast-band, .saas-mockup { box-shadow: 7px 7px 0 currentColor; }
+}
+
+
+
+/* === Readability correction: keep the black/yellow redesign, but make all text crisp and high-contrast === */
+html, body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+}
+
+section {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: background 300ms ease, color 300ms ease !important;
+}
+
+section.in-view { opacity: 1 !important; transform: none !important; }
+
+h1, h2, h3, h4 {
+    line-height: 1.08;
+    letter-spacing: -0.028em;
+    text-shadow: none !important;
+}
+
+p, li, td, th, label, button, a, .def-desc, .intent-content, .meta-bar, .breadcrumb {
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body, p, li, td, label, .def-desc, .intent-content, .faq-card p, .matrix-card p {
+    font-weight: 500;
+}
+
+:root {
+    --muted-dark: rgba(245, 245, 240, 0.92);
+    --muted-light: rgba(10, 10, 10, 0.82);
+    --border-dark: rgba(245, 230, 66, 0.62);
+    --border-light: rgba(10, 10, 10, 0.24);
+}
+
+section:nth-of-type(even), .bg-alt, .saas-moment, .site-footer {
+    color: #FDFDF7;
+}
+
+section:nth-of-type(odd) {
+    color: #070707;
+}
+
+.hero-pane-dark p,
+.hero-pane-dark .meta-bar,
+.hero-pane-dark .breadcrumb {
+    color: #FDFDF7;
+}
+
+.hero-pane-yellow,
+.quick-answer,
+.toc-card,
+.pricing-result,
+.testimonial-band,
+.matrix-card:nth-child(even),
+.faq-card:nth-child(even),
+.table-group-header {
+    color: #070707;
+}
+
+.quick-answer p,
+.toc-card a,
+.pricing-result p,
+.testimonial-band p,
+.matrix-card:nth-child(even) p,
+.faq-card:nth-child(even) p {
+    color: inherit !important;
+}
+
+.matrix-card:nth-child(odd),
+.faq-card:nth-child(odd),
+.pricing-builder,
+.saas-mockup {
+    color: #FDFDF7;
+}
+
+/* Avoid parent-level CSS filters because they rasterize text and make it look blurry. */
+.matrix-card {
+    transition: background-color 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease !important;
+    will-change: auto;
+}
+.matrix-card:hover:nth-child(odd) {
+    filter: none !important;
+    background: #1A1A1A;
+    color: #FFFFFF;
+    transform: translate(-4px, -4px);
+}
+.matrix-card:hover:nth-child(even) {
+    filter: none !important;
+    background: #E8DA25;
+    color: #070707;
+    transform: translate(-4px, -4px);
+}
+
+/* Keep headings readable even before/without animation support. */
+.word-split {
+    display: inline;
+    overflow: visible;
+    margin-right: 0.18em;
+}
+.word-split .half,
+.word-split .half-left,
+.word-split .half-right,
+.in-view .word-split .half {
+    display: inline;
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+}
+
+/* Sharpen dark-section cards and form controls. */
+.intent-content,
+.quiz-container,
+.pricing-builder,
+.faq-card,
+.matrix-card,
+.toc-card,
+.testimonial-band {
+    backface-visibility: visible;
+    transform: none;
+}
+
+.intent-content {
+    background: rgba(245, 230, 66, 0.08);
+    padding: 18px 20px;
+}
+
+.quiz-options label,
+.pricing-checks label,
+.faq-filter,
+.intent-btn {
+    color: inherit;
+}
+
+#guide h3 {
+    line-height: 1.12;
+    align-items: center;
+    gap: 0;
+}
+#guide h3 {
+    padding-right: 22px;
+}
+
+.comp-table-wrapper,
+.content-image,
+.hero-image,
+.toc-card,
+.quiz-container,
+.matrix-card,
+.pricing-builder,
+.faq-card,
+.contrast-band,
+.saas-mockup {
+    filter: none !important;
+}
+
+@media (max-width: 768px) {
+    h1, h2, h3, h4 { line-height: 1.12; letter-spacing: -0.02em; }
+    body, p, li, td, label { font-weight: 500; }
+}
+
+
+
+/* === FINAL VISIBILITY PATCH: maximum contrast and no hidden/soft text anywhere === */
+*, *::before, *::after {
+    text-shadow: none !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+main section,
+main section * {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+main :is(h1,h2,h3,h4,p,li,td,th,label,span,strong,em,a,button,.ui-label,.breadcrumb,.meta-bar,.meta-text,.def-term,.def-desc,.testimonial-quote,.testimonial-author,.plan-badge,.saas-chip),
+.site-header :is(a,span,button),
+.site-footer :is(a,span,p,div) {
+    text-shadow: none !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    -webkit-text-fill-color: currentColor !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Dark backgrounds: force clean warm-white text. */
+.hero-pane-dark,
+section.bg-alt,
+section:nth-of-type(even),
+.saas-moment,
+.site-footer,
+.pricing-builder,
+.saas-mockup,
+.matrix-card:nth-child(odd),
+.faq-card:nth-child(odd) {
+    background-color: #0A0A0A !important;
+    color: #FFFFFF !important;
+}
+
+.hero-pane-dark :is(h1,h2,h3,h4,p,li,span,strong,em,a,.breadcrumb,.meta-bar),
+section.bg-alt :is(h1,h2,h3,h4,p,li,span,strong,em,label,.def-term,.def-desc,.testimonial-quote,.testimonial-author),
+section:nth-of-type(even) :is(h1,h2,h3,h4,p,li,span,strong,em,label,.def-term,.def-desc,.testimonial-quote,.testimonial-author),
+.saas-moment :is(h1,h2,h3,h4,p,li,span,strong,em,.meta-text),
+.site-footer :is(p,span,div),
+.pricing-builder :is(h1,h2,h3,h4,p,li,label,span,strong,em),
+.saas-mockup :is(p,li,span,strong,em,div),
+.matrix-card:nth-child(odd) :is(h1,h2,h3,h4,p,span,strong,em,a),
+.faq-card:nth-child(odd) :is(h1,h2,h3,h4,p,span,strong,em,a) {
+    color: #FFFFFF !important;
+}
+
+/* Yellow/light cards: force near-black text and solid backgrounds. */
+.hero-pane-yellow,
+.quick-answer,
+.toc-card,
+.pricing-result,
+.testimonial-band,
+.matrix-card:nth-child(even),
+.faq-card:nth-child(even),
+.table-group-header,
+.intent-content.active,
+.quiz-container,
+.comp-table-wrapper table {
+    background-color: #F5E642 !important;
+    color: #0A0A0A !important;
+}
+
+.hero-pane-yellow :is(h1,h2,h3,h4,p,li,span,strong,em,a,.ui-label),
+.quick-answer :is(h1,h2,h3,h4,p,li,span,strong,em,a,.ui-label),
+.toc-card :is(h1,h2,h3,h4,p,li,span,strong,em,a,.ui-label),
+.pricing-result :is(h1,h2,h3,h4,p,li,span,strong,em,a,.ui-label),
+.testimonial-band :is(h1,h2,h3,h4,p,li,span,strong,em,a,.ui-label),
+.matrix-card:nth-child(even) :is(h1,h2,h3,h4,p,span,strong,em,a),
+.faq-card:nth-child(even) :is(h1,h2,h3,h4,p,span,strong,em,a),
+.intent-content.active :is(h1,h2,h3,h4,p,span,strong,em,a),
+.quiz-container :is(h1,h2,h3,h4,p,li,label,span,strong,em,a),
+.comp-table-wrapper table :is(th,td,p,span,strong,em,a) {
+    color: #0A0A0A !important;
+}
+
+/* Keep the step headings visible in the How-to section. */
+#guide h3,
+#guide h3 :is(a,span,strong,em) {
+    background-color: #F5E642 !important;
+    color: #0A0A0A !important;
+    -webkit-text-fill-color: #0A0A0A !important;
+}
+#guide h3::before {
+    background-color: #0A0A0A !important;
+    color: #F5E642 !important;
+    -webkit-text-fill-color: #F5E642 !important;
+}
+#guide .def-list,
+#guide .def-item,
+#guide .def-term,
+#guide .def-desc {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+/* Links stay readable on both surfaces. */
+section.bg-alt a,
+section:nth-of-type(even) a,
+.saas-moment a,
+.site-footer a,
+.pricing-builder a,
+.matrix-card:nth-child(odd) a,
+.faq-card:nth-child(odd) a {
+    color: #F5E642 !important;
+    -webkit-text-fill-color: #F5E642 !important;
+}
+.quick-answer a,
+.toc-card a,
+.pricing-result a,
+.testimonial-band a,
+.matrix-card:nth-child(even) a,
+.faq-card:nth-child(even) a,
+.intent-content.active a,
+.quiz-container a,
+table a {
+    color: #0A0A0A !important;
+    -webkit-text-fill-color: #0A0A0A !important;
+}
+
+/* Footer and recommendation labels had inline muted colors; override them for visibility. */
+.site-footer .ui-label,
+.saas-moment .ui-label,
+.site-footer span[style],
+.saas-moment span[style] {
+    color: #F5E642 !important;
+    -webkit-text-fill-color: #F5E642 !important;
+}
+
+/* Remove movement/hidden-heading risk from split-word animation. */
+.word-split,
+.word-split .half,
+.word-split .half-left,
+.word-split .half-right,
+.in-view .word-split .half {
+    display: inline !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    overflow: visible !important;
+    transition: none !important;
+}
+
+/* Make table rows readable regardless of section background. */
+table,
+tbody,
+thead,
+tr,
+td,
+th {
+    background-color: #F5E642 !important;
+    color: #0A0A0A !important;
+    border-color: #0A0A0A !important;
+}
+table :is(td,th,strong,span,em,a) {
+    color: #0A0A0A !important;
+    -webkit-text-fill-color: #0A0A0A !important;
+}
+
+/* Images remain proportional and never cover text. */
+.content-image,
+.hero-image,
+.card-image,
+.method-image,
+.product-shot,
+.dashboard-image {
+    background: transparent !important;
+    overflow: visible !important;
+    filter: none !important;
+}
+.content-image img,
+.hero-image img,
+.card-image img,
+.method-image img,
+.product-shot img,
+.dashboard-image img {
+    height: auto !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    filter: none !important;
+}
+
+
+
+/* === HERO READABILITY OVERRIDE: fixes invisible white-on-white hero text === */
+.hero {
+    background: #0A0A0A !important;
+}
+.hero-split-wrap {
+    background: #0A0A0A !important;
+}
+.hero-pane.hero-pane-dark {
+    background: #0A0A0A !important;
+    color: #FFFFFF !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+.hero-pane.hero-pane-dark::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #0A0A0A !important;
+    z-index: -1;
+}
+.hero-pane.hero-pane-dark :is(h1,h2,h3,h4,p,span,strong,em,a,.breadcrumb,.meta-bar) {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    text-shadow: none !important;
+    mix-blend-mode: normal !important;
+}
+.hero-pane.hero-pane-dark .breadcrumb,
+.hero-pane.hero-pane-dark .meta-bar,
+.hero-pane.hero-pane-dark .meta-bar span {
+    color: #F5E642 !important;
+    -webkit-text-fill-color: #F5E642 !important;
+}
+.hero-pane.hero-pane-dark h1 {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    letter-spacing: -0.035em;
+}
+.hero-pane.hero-pane-yellow {
+    background: #F5E642 !important;
+    color: #0A0A0A !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+.hero-pane.hero-pane-yellow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #F5E642 !important;
+    z-index: -1;
+}
+.hero-pane.hero-pane-yellow :is(h1,h2,h3,h4,p,span,strong,em,a,.ui-label),
+.hero-pane.hero-pane-yellow .quick-answer,
+.hero-pane.hero-pane-yellow .quick-answer :is(h1,h2,h3,h4,p,span,strong,em,a,.ui-label) {
+    color: #0A0A0A !important;
+    -webkit-text-fill-color: #0A0A0A !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    text-shadow: none !important;
+    mix-blend-mode: normal !important;
+}
+@media (max-width: 768px) {
+    .hero-split-wrap {
+        background: #0A0A0A !important;
+    }
+    .hero-pane.hero-pane-dark {
+        background: #0A0A0A !important;
+    }
+    .hero-pane.hero-pane-yellow {
+        background: #F5E642 !important;
+    }
+}
+
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="container-wide">
+<a class="site-wordmark" href="/">
+<span aria-hidden="true" class="brand-mark">
+<svg focusable="false" role="img" viewbox="0 0 48 48">
+<path class="brand-shield" d="M24 4 40 10v12c0 10.2-6.8 17.8-16 22C14.8 39.8 8 32.2 8 22V10L24 4Z"></path>
+<path class="brand-bolt" d="M26.8 11 17 25h6.2L21.2 37 31 21h-6.4L26.8 11Z"></path>
+</svg>
+</span>
+<span class="brand-text">Secure Drive Hub</span>
+</a>
+<nav class="nav-links" id="main-nav">
+<a href="#overview">Overview</a>
+<a href="#threats">Threat Model</a>
+<a href="#methods">Methods</a>
+<a href="#recommendation">Top Pick</a>
+<a href="#faq">FAQ</a>
+<a class="btn-outline" href="#recommendation">See Our Top Pick →</a>
+</nav>
+<button aria-label="Toggle menu" class="hamburger" id="menu-toggle">☰</button>
+</div>
+</header>
+<main>
+<!-- S1: HERO -->
+<section class="hero">
+<div class="hero-split-wrap"><div class="hero-pane hero-pane-dark"><div class="breadcrumb">Security Guides / Hardware / USB Flash Drives</div><h1>USB Flash Drive Security — Best Practices and Risks</h1><p>Removable drives are essential for portable data, but they remain one of the largest endpoints for data loss and malware injection. This complete guide breaks down the physical and software risks of USB drives and exactly how to secure them.</p><div class="meta-bar">
+<span>Editorial Team</span>
+<span>•</span>
+<span>Updated May 2026</span>
+<span>•</span>
+<span>14 min read</span>
+</div></div><div class="hero-pane hero-pane-yellow"><div class="quick-answer">
+<span class="ui-label">Quick Answer</span>
+<p><strong>How to secure a USB flash drive:</strong> True security requires defending both the drive and the computer port. Protect the drive contents against physical theft by using volume encryption or portable locking software. Protect the host computer against unauthorized access by using endpoint management tools that block unknown devices, disable autoplay, and whitelist approved drives at the system level.</p>
+</div><figure class="content-image hero-image"><img alt="USB flash drive security best practices with protected removable storage" decoding="async" loading="lazy" src="https://i.ibb.co/HDN357D3/usb-flash-drive-security-best-practices.jpg"/></figure></div></div>
+</section>
+<!-- S2: TOC -->
+<section class="bg-alt" id="toc-section">
+<div class="container-reading">
+<div class="toc-card">
+<span class="ui-label">Contents</span>
+<ol>
+<li><a href="#overview">What people search for (Intent Map)</a></li>
+<li><a href="#threats">The USB Threat Model: Risks Explained</a></li>
+<li><a href="#methods">Head-to-Head Comparison of Methods</a></li>
+<li><a href="#guide">How to Secure a USB Drive at Work</a></li>
+<li><a href="#recommendation">Tool Shortlist &amp; Our Recommendation</a></li>
+<li><a href="#troubleshooting">Owner-Safe Recovery &amp; Troubleshooting</a></li>
+<li><a href="#faq">Frequently Asked Questions</a></li>
+</ol>
+</div><figure class="content-image overview-image"><img alt="Data security devices locked with a shield illustration for USB protection overview" decoding="async" loading="lazy" src="https://i.ibb.co/ZC5xRkQ/data-security-devices-lock-illustration.png"/></figure>
+</div>
+</section>
+<!-- S3: RAW GSC / INTENT WIDGET (Interactive) -->
+<section id="overview">
+<div class="container-reading">
+<h2>Find Your Solution</h2>
+<p>Users come to this topic with different needs. Select what you are trying to do below to reveal the most direct path forward.</p><figure class="content-image"><img alt="Digital and physical security concept for removable media protection" decoding="async" loading="lazy" src="https://i.ibb.co/chqG7MnN/digital-and-physical-security.jpg"/></figure>
+<div class="intent-widget">
+<button class="intent-btn active" data-target="intent-howto">How to secure</button>
+<button class="intent-btn" data-target="intent-compare">Compare options</button>
+<button class="intent-btn" data-target="intent-troubleshoot">Troubleshoot / Fix</button>
+<button class="intent-btn" data-target="intent-specific">Specific uses</button>
+</div>
+<div class="intent-content active" id="intent-howto">
+<p><strong>You want to know <a href="https://techleez.co.uk/why-you-should-password-protect-your-usb-drive/" rel="noopener noreferrer" target="_blank">how to password protect a flash drive</a>.</strong></p>
+<p>If you are on Windows 11 Pro, you can use built-in BitLocker. If you need it to work everywhere (Mac, PC, public computers) without requiring administrative rights, you need a portable software tool. <a href="#guide">Jump to the step-by-step tutorial →</a></p>
+</div>
+<div class="intent-content" id="intent-compare">
+<p><strong>You are comparing hardware vs software encryption.</strong></p>
+<p>Hardware-encrypted drives are the gold standard for enterprises but cost significantly more. Software encryption is highly flexible, works on drives you already own, and supports modern file formats like FAT32 and NTFS. <a href="#methods">Jump to the comparison table →</a></p>
+</div>
+<div class="intent-content" id="intent-troubleshoot">
+<p><strong>You are locked out or dealing with a compromised drive.</strong></p>
+<p>If you forgot your password, refer to our owner-recovery steps for finding your Master Key. If you suspect a virus, do not open files—format the drive or scan it safely. <a href="#troubleshooting">Jump to troubleshooting →</a></p>
+</div>
+<div class="intent-content" id="intent-specific">
+<p><strong>You have a specific use case (e.g., Storing journal on flash drive).</strong></p>
+<p>For high-privacy personal data like a journal, relying on OS-level hidden folders is unsafe. You must use 256-bit AES encryption to ensure privacy if the drive is lost. <a href="#faq">See specific use cases in the FAQ →</a></p>
+</div>
+</div>
+</section>
+<!-- S4: THREAT MODEL & RISK MATRIX -->
+<section class="bg-alt" id="threats">
+<div class="container-reading">
+<h2>USB Flash Drive Security — Complete Risk Guide</h2>
+<p>Understanding <em>how are usb flash drives a security risk</em> requires breaking down the threats into three distinct categories. A password on your files won't protect your computer from a malicious piece of hardware.</p>
+<div class="matrix-grid">
+<div class="matrix-card">
+<h4>1. Data Theft (Loss/Theft)</h4><figure class="content-image card-image"><img alt="USB drive representing portable data theft risk" decoding="async" loading="lazy" src="https://i.ibb.co/LdT6nPBq/the-USB-drive.jpg"/></figure>
+<p><strong>The Threat:</strong> You leave a 16GB flash drive containing client data or personal journals at a coffee shop. Anyone who plugs it in can read the files.</p>
+<p><strong>The Fix:</strong> Drive-level encryption (BitLocker, or portable security apps) ensuring the data remains an unreadable cryptographic jumble without the correct authentication.</p>
+</div>
+<div class="matrix-card">
+<h4>2. Rogue Data Exfiltration</h4><figure class="content-image card-image"><img alt="Blocked USB port showing endpoint exfiltration prevention" decoding="async" loading="lazy" src="https://i.ibb.co/5XXFPSP1/The-Blocked-Port.jpg"/></figure>
+<p><strong>The Threat:</strong> A departing employee connects a personal external drive, a mobile phone, or a CD burner to their workstation and quietly transfers gigabytes of proprietary corporate data.</p>
+<p><strong>The Fix:</strong> Implement endpoint port-blocking software. This denies read/write access to unrecognized storage mediums (including non-system partitions and network drives) preventing the data from ever leaving the machine.</p>
+</div>
+<div class="matrix-card">
+<h4>3. <a href="https://security.stackexchange.com/questions/118854/attacks-via-physical-access-to-usb-dma" rel="noopener noreferrer" target="_blank">Hardware Spoofing (BadUSB)</a></h4><figure class="content-image card-image"><img alt="USB malware detection and prevention visual for BadUSB threats" decoding="async" loading="lazy" src="https://i.ibb.co/23wDmkss/usb-drive-virus-and-malware-detection-and-prevention.jpg"/></figure>
+<p><strong>The Threat:</strong> A seemingly normal USB drive has its firmware rewritten. When plugged in, it registers as a keyboard and types malicious commands into the host machine in milliseconds.</p>
+<p><strong>The Fix:</strong> Never use a found drive. Utilize enterprise endpoint tools that operate at the Windows kernel level to establish a strict "whitelist" of authorized devices, blocking all other hardware upon insertion.</p>
+</div>
+</div>
+<h3>Risk Assessment Quiz</h3>
+<p>Are your current USB habits safe? Take this quick assessment.</p>
+<div class="quiz-container">
+<div class="quiz-question">Do you use the same USB drive for home and office computers?</div>
+<div class="quiz-options">
+<label><input name="q1" type="radio" value="high"/> Yes, constantly</label>
+<label><input name="q1" type="radio" value="low"/> No, they are kept strictly separate</label>
+</div>
+<br/>
+<div class="quiz-question">Does your office computer accept any flash drive you plug into it?</div>
+<div class="quiz-options">
+<label><input name="q2" type="radio" value="high"/> Yes, they mount immediately</label>
+<label><input name="q2" type="radio" value="low"/> No, unapproved drives are blocked</label>
+</div>
+<button class="btn-outline" id="btn-quiz" style="margin-top:20px;">Calculate Risk Score</button>
+<div id="quiz-result"></div>
+</div>
+</div>
+</section>
+<!-- S5: METHODS COMPARISON (V2 Table) -->
+<section id="methods">
+<div class="container-wide">
+<div style="max-width: 760px; margin: 0 auto;">
+<h2>Head-to-Head: USB Protection Methods</h2>
+<p>There are multiple ways to approach <a href="https://mspoweruser.com/secure-your-data-top-usb-password-protection-tools/" rel="noopener noreferrer" target="_blank">USB data loss prevention</a>. Here is how the native, software, and hardware methods compare.</p>
+</div>
+<figure class="content-image wide-image"><img alt="USB disk security software interface used to compare protection methods" decoding="async" loading="lazy" src="https://i.ibb.co/TDtqFLT2/usb-disk-security-software.jpg"/></figure><div class="comp-table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Cost</th>
+<th>Security Level</th>
+<th>Cross-Platform</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr class="table-group-header">
+<td colspan="5">Built-in OS Tools</td>
+</tr>
+<tr>
+<td><strong>BitLocker to Go</strong></td>
+<td>Free (Win Pro only)</td>
+<td>High (AES)</td>
+<td>No (Read-only on Mac with 3rd party tool)</td>
+<td>Corporate Windows-only environments.</td>
+</tr>
+<tr class="table-group-header">
+<td colspan="5">Hardware Solutions</td>
+</tr>
+<tr>
+<td><strong>Hardware Encrypted Drive (e.g., FIPS 140-2)</strong></td>
+<td>$50 - $200+</td>
+<td>Maximum (Hardware level)</td>
+<td>Yes (OS Agnostic)</td>
+<td>Government, healthcare, executive travel.</td>
+</tr>
+<tr class="table-group-header">
+<td colspan="5">Third-Party Software</td>
+</tr>
+<tr>
+<td><strong>Port Blockers (Endpoint)</strong></td>
+<td>Paid</td>
+<td>High (Kernel-level)</td>
+<td>No (Installed on host PC)</td>
+<td>IT admins securing office networks against data leaks.</td>
+</tr>
+<tr>
+<td style="border-left: 3px solid var(--color-primary-accent); background: #fdfcfb;"><strong>Portable Lockers (Drive-level)</strong></td>
+<td style="background: #fdfcfb;">Freemium / Paid</td>
+<td style="background: #fdfcfb;">High (AES-256)</td>
+<td style="background: #fdfcfb;">Yes (Runs directly from the drive)</td>
+<td style="background: #fdfcfb;">Users needing easy cross-PC access without host admin rights.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- S6: GUIDE & TUTORIAL -->
+<section class="bg-alt" id="guide">
+<div class="container-reading">
+<h2>How to Secure a USB Drive at Work</h2>
+<p>If you are looking for <em>how to password protect a flash drive for free</em> or want a robust business solution, you have to decide if you are trying to protect the data *on* the drive, or protect the computer *from* the drive. Here are the distinct approaches.</p>
+<h3>Method A: Using Windows 11 <a href="https://windowsreport.com/encrypt-usb-flash-drive-windows/" rel="noopener noreferrer" target="_blank">BitLocker</a> (Protecting the Drive)</h3><figure class="content-image method-image"><img alt="Windows 11 encryption tools including BitLocker and device encryption" decoding="async" loading="lazy" src="https://i.ibb.co/5x1DxZg3/windows-11-encryption-efs-bitlocker-and-device-encryption.jpg"/></figure>
+<div class="diff-viz">
+<span>Difficulty:</span>
+<div class="diff-bars">
+<div class="diff-bar fill-med"></div><div class="diff-bar fill-med"></div><div class="diff-bar"></div>
+</div>
+<span>(Requires Windows Pro)</span>
+</div>
+<ol>
+<li>Insert your flash drive into a Windows 11 Pro/Enterprise machine.</li>
+<li>Open <strong>This PC</strong>, right-click the flash drive, and select <strong>Turn on BitLocker</strong>.</li>
+<li>Choose <strong>Use a password to unlock the drive</strong> and enter a strong passphrase.</li>
+<li>Save the recovery key to your Microsoft account or print it securely.</li>
+<li>Click <strong>Start encrypting</strong>. Wait for the process to finish before removing the drive.</li>
+</ol>
+<p><em>Limitation:</em> If you take this drive to a Mac or a PC where you lack administrative privileges, you may not be able to mount or modify the files.</p>
+<h3>Method B: Using Portable Encryption Software (Protecting the Drive Natively)</h3><figure class="content-image method-image"><img alt="USB Secure password dialog screenshot for portable drive encryption" decoding="async" loading="lazy" src="https://i.ibb.co/NnprhyFP/usb-secure-password-dialog-screenshot.jpg"/></figure>
+<div class="diff-viz">
+<span>Difficulty:</span>
+<div class="diff-bars">
+<div class="diff-bar fill-low"></div><div class="diff-bar"></div><div class="diff-bar"></div>
+</div>
+<span>(Easiest for cross-PC sharing)</span>
+</div>
+<p>Tools designed specifically for portability embed a lightweight, self-contained locking application onto the physical media itself.</p>
+<ol>
+<li>Download the portable security executable directly to the root directory of your USB drive.</li>
+<li>Execute the setup application from inside the flash drive. Set your master credentials.</li>
+<li>The software encrypts the contents, rendering them invisible to the operating system.</li>
+<li><strong>The Advantage:</strong> When plugging the drive into a foreign computer (like a library or print shop), you do not need administrative rights. You run the app directly from the drive to authenticate.</li>
+<li><strong>Virtual Drive Mounting:</strong> Premium portable tools allow you to "view" the locked files via a temporary virtual drive interface. This allows you to interact with your data safely without permanently decrypting the entire drive on an untrusted computer—which also prevents data corruption if the drive is abruptly yanked from the port.</li>
+</ol>
+<h3 style="margin-top:3rem;">Method C: Port-Level Endpoint Control (Protecting the Computer)</h3><figure class="content-image method-image"><img alt="Whitelisted USB drive illustration for endpoint port control" decoding="async" loading="lazy" src="https://i.ibb.co/tTKSrpnX/Whitelisted-Drive.jpg"/></figure>
+<p>If you manage IT for a team, relying on employees to manually encrypt drives is insufficient. You must actively police the hardware connection points to stop data exfiltration to unauthorized USBs, smartphones, or CD burners.</p>
+<div class="def-list">
+<div class="def-item">
+<div class="def-term">Kernel-Level Blocking</div>
+<div class="def-desc">Deploy software that intercepts external hardware connections at the operating system's root level. This ensures that unauthorized devices are rejected before they can mount, and ensures the protection persists even if a malicious actor boots the machine in Safe Mode.</div>
+</div>
+<div class="def-item">
+<div class="def-term">Device Whitelisting</div>
+<div class="def-desc">Rather than playing whack-a-mole with dangerous hardware, implement a "deny all, allow some" policy. IT administrators can register the specific hardware serial numbers of company-approved flash drives, allowing them to function normally while rendering all outside devices useless.</div>
+</div>
+<div class="def-item">
+<div class="def-term">Intrusion Auditing</div>
+<div class="def-desc">Endpoint tools provide logging capabilities that track precisely when an unauthorized drive was inserted, or when an incorrect password was entered, providing an essential audit trail for investigating security breaches.</div>
+</div>
+</div>
+</div>
+</section>
+<!-- S7: RECOMMENDATION / SAAS MOMENT -->
+<section class="saas-moment" id="recommendation">
+<div class="container-wide">
+<span class="ui-label" style="color:var(--color-secondary-accent)">Our Top Recommendation</span>
+<h2>The NewSoftwares Endpoint Suite</h2>
+<p class="meta-text">Securing portable data requires addressing both sides of the connection. We recommend pairing <strong>USB Secure</strong> for encrypting the data on the drives you carry, and <strong>USB Block</strong> for locking down the physical ports on your workstation.</p>
+<div class="saas-actions">
+<a class="btn-white" href="https://store.newsoftwares.net/" rel="noopener noreferrer" target="_blank">Download Free Trials →</a>
+<a class="btn-ghost" href="https://store.newsoftwares.net/" rel="noopener noreferrer" target="_blank">View Full Version Pricing</a>
+</div>
+<div class="saas-mockup"><div class="product-shot-grid"><figure class="content-image product-shot"><img alt="USB Secure product boxshot for encrypted flash drive protection" decoding="async" loading="lazy" src="https://i.ibb.co/tPkzhLr6/usb-secure-boxshot-high-res.png"/></figure><figure class="content-image product-shot"><img alt="USB Block product boxshot for blocking unauthorized USB devices" decoding="async" loading="lazy" src="https://i.ibb.co/bgZWtpCB/usb-block-boxshot-high-res.png"/></figure></div>
+<div class="saas-chip">AES-256 Portable Executable</div>
+<div class="saas-chip">Virtual Drive Safe-Viewing</div>
+<div class="saas-chip">Kernel-Level Port Control</div>
+<div class="saas-chip">Hardware Whitelisting</div>
+<div style="width: 100%; text-align: center; margin-top: 1rem; color: #7f95a8; font-family: monospace;">
+                        [ Security Dashboard ]<br/><br/>
+                        Drive Status: Encrypted | Port Status: Locked
+                    </div>
+<figure class="content-image dashboard-image"><img alt="USB Block software dashboard screenshot for endpoint device control" decoding="async" loading="lazy" src="https://i.ibb.co/B574bGR8/usb-block-screen-1.png"/></figure></div>
+</div>
+</section>
+<!-- S8: PRICING (V4 Feature Checklist) -->
+<section class="bg-alt" id="pricing">
+<div class="container-reading">
+<h2>Which Level of Protection Do You Need?</h2>
+<p>Not sure if you need the free trial limits or the fully unlocked versions of our recommended tools? Check the features your workflow requires below.</p><figure class="content-image"><img alt="USB Secure main screen showing flash drive password protection options" decoding="async" loading="lazy" src="https://i.ibb.co/1Y7Z4tmV/usb-secure-screen-1.png"/></figure>
+<div class="pricing-builder">
+<div class="pricing-checks">
+<label><input class="price-check" data-tier="free" type="checkbox"/> Basic device locking</label>
+<label><input class="price-check" data-tier="free" type="checkbox"/> Simple password protection</label>
+<label><input class="price-check" data-tier="paid" type="checkbox"/> Operation without trial reminder popups</label>
+<label><input class="price-check" data-tier="paid" type="checkbox"/> Advanced hardware whitelisting rules</label>
+<label><input class="price-check" data-tier="paid" type="checkbox"/> Permanent logging of hack attempts</label>
+<label><input class="price-check" data-tier="paid" type="checkbox"/> Stealth mode application hiding</label>
+</div>
+<div class="pricing-result">
+<span class="plan-badge" id="plan-badge">Trial Version</span>
+<h3 id="plan-title">Evaluation Access</h3>
+<p id="plan-desc" style="font-size:0.9rem; margin-bottom:1.5rem;">Ideal for testing the workflow and ensuring compatibility with your devices.</p>
+<a class="btn-outline" href="https://www.softlay.com/downloads/usb-secure" id="plan-cta" rel="noopener noreferrer" target="_blank">Download Free</a>
+</div>
+</div>
+</div>
+</section>
+<!-- S9: TROUBLESHOOTING & RECOVERY -->
+<section id="troubleshooting">
+<div class="container-reading">
+<h2>Owner-Safe Troubleshooting &amp; Recovery</h2><figure class="content-image"><img alt="Accessing locked data after authentication in a secure recovery workflow" decoding="async" loading="lazy" src="https://i.ibb.co/gLVNxgq4/Accessing-Data-Unlocking.jpg"/></figure>
+<p>We see many queries like <em>"how can i bypass my flash drive password"</em>. If you are the legitimate owner of the data and are locked out, here are the safe verification and recovery steps.</p>
+<h3>Forgot Your Password?</h3>
+<p>High-security tools do not have a simple "forgot password" backdoor—that would defeat the purpose of encryption.</p>
+<ul>
+<li><strong>BitLocker:</strong> Check your Microsoft account online at <code>account.microsoft.com/devices/recoverykey</code>. Alternatively, check with your IT department if it was a domain-joined PC.</li>
+<li><strong>Third-Party Software:</strong> Professional tools like USB Secure allow owners to configure a "Master Key" during setup. If you created one, you can use it to override a forgotten daily password. Furthermore, check the "Lost and Found" details section of the software if you set it up, as it may contain hints or contact routes you established.</li>
+</ul>
+<h3>Drive Requests formatting upon insertion</h3>
+<p>If you plug in your drive and Windows says "You need to format the disk in drive D: before you can use it", <strong>do not click format</strong>. This often happens if the drive was encrypted with a tool that alters the file system structure, or if the drive was yanked out abruptly. Open your specific portable encryption software executable directly from the drive's root folder first to see if it mounts properly via its virtual environment.</p>
+<h3>Safe USB Disposal and Data Wiping</h3>
+<p>Deleting a file on a USB drive does not remove the data; it only removes the index. To securely wipe a USB drive before disposal: do not just format it. Use a secure shredding utility to overwrite the drive's free space with random data multiple times (DoD 5220.22-M standard).</p>
+</div>
+</section>
+<!-- S10: TESTIMONIALS (V4) -->
+<section class="bg-alt">
+<div class="container-reading">
+<h2>What Users Say About Portable Encryption</h2><figure class="content-image"><img alt="Security shield protecting data for portable encryption testimonials" decoding="async" loading="lazy" src="https://i.ibb.co/bjywWFhL/security-shield-protecting.jpg"/></figure>
+<div class="testimonial-band">
+<p class="testimonial-quote">"I keep my client tax records on a flash drive when traveling. Knowing that if it falls out of my bag at the airport, the data is mathematically unreadable without my master password gives me absolute peace of mind."</p>
+<p class="testimonial-author">— Sarah M., Independent CPA</p>
+</div>
+<div class="testimonial-band" style="border-left-color: var(--color-meta-text);">
+<p class="testimonial-quote">"Our IT policy strictly forbade USB drives until we deployed managed, hardware-encrypted drives and endpoint blocking. The difference in our security posture is night and day against BadUSB vectors and rogue data copying."</p>
+<p class="testimonial-author">— David T., Systems Administrator</p>
+</div>
+</div>
+</section>
+<!-- S11: FAQ (V2 Masonry + Filter) -->
+<section id="faq">
+<div class="container-wide">
+<div style="max-width:760px; margin: 0 auto; text-align: center;">
+<h2>Frequently Asked Questions</h2>
+<p>In-depth answers to common queries regarding flash drive security features and protocols.</p><figure class="content-image"><img alt="USB security key used for hardware-based two-factor authentication" decoding="async" loading="lazy" src="https://i.ibb.co/LdhVNTRm/what-is-a-usb-security-key.jpg"/></figure>
+</div>
+<div class="faq-controls" id="faq-filters">
+<button class="faq-filter active" data-filter="all">All</button>
+<button class="faq-filter" data-filter="risk">Risks &amp; Malware</button>
+<button class="faq-filter" data-filter="hardware">Hardware &amp; Software</button>
+<button class="faq-filter" data-filter="password">Access &amp; Control</button>
+</div>
+<div class="faq-grid" id="faq-grid">
+<div class="faq-card" data-category="risk">
+<h3>What are the security risks of USB flash drives?</h3>
+<p>The primary risks include data theft via physical loss, malware delivery (viruses, ransomware) to host networks, and BadUSB attacks where the drive mimics a keyboard to execute malicious commands.</p>
+</div>
+<div class="faq-card" data-category="password">
+<h3>Do I need administrator rights to open an encrypted flash drive on a public computer?</h3>
+<p>It depends on the method. Built-in OS tools or deeply integrated software often require administrative privileges to mount encrypted volumes. However, specialized portable apps (like USB Secure) operate independently, allowing you to authenticate and access your files on public or restricted machines without needing admin credentials.</p>
+</div>
+<div class="faq-card" data-category="hardware">
+<h3>Can I view my locked files without fully decrypting the entire drive?</h3>
+<p>Yes, if you use software that supports virtual drive mounting. Instead of decrypting the entire physical volume—which can take time and exposes all data at once—the software creates a temporary, secure virtual environment. You can interact with your files safely, and when you close it, everything remains locked. This also protects against corruption if the drive is abruptly disconnected.</p>
+</div>
+<div class="faq-card" data-category="hardware">
+<h3>What happens if someone tries to force their way into my blocked USB ports?</h3>
+<p>If you have installed endpoint protection software (like USB Block), the hardware connection is intercepted. The software will actively log the incident, recording the date, time, and specific invalid password attempts, creating an auditable trail of the intrusion attempt.</p>
+</div>
+<div class="faq-card" data-category="hardware">
+<h3>What is a <a href="https://uk.pcmag.com/guide/78973/the-ultimate-usb-key" rel="noopener noreferrer" target="_blank">USB security key</a>?</h3>
+<p>A USB security key (like a YubiKey) is a hardware device used for two-factor authentication (2FA). It does not store files; instead, it cryptographically proves your identity to services like Google or Bank of America when plugged into a USB port.</p>
+</div>
+<div class="faq-card" data-category="risk">
+<h3>What is BadUSB and how do I protect against it?</h3>
+<p>BadUSB is an attack where a USB device's firmware is altered so it registers as a Human Interface Device (keyboard) rather than storage. To protect against it, never plug an unknown or found USB drive into any computer, and use endpoint management to whitelist specific hardware serial numbers.</p>
+</div>
+<div class="faq-card" data-category="password">
+<h3>Storing journal on flash drive: security privacy best practices?</h3>
+<p>If you are storing highly sensitive personal data like a journal on a flash drive, do not rely on "hidden folders". You must use AES-256 encryption. Create an encrypted container on the drive using portable software so that even if the drive is lost, the text files remain mathematically unreadable.</p>
+</div>
+<div class="faq-card" data-category="hardware">
+<h3>What is the difference between hardware and software encryption?</h3>
+<p>Hardware-encrypted USB drives have a physical cryptoprocessor chip (and often a physical keypad) that handles encryption independently of the computer. Software encryption uses the computer's CPU to encrypt data before writing it to a standard, cheaper flash drive formatted to FAT32 or NTFS.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- S12: RELATED / VERDICT -->
+<section class="bg-alt final-verdict-section">
+<div class="container-reading text-center" style="text-align: center;">
+<h2>Our Final Verdict</h2><div class="contrast-band"><p>USB flash drive data security risks are real, but they are entirely manageable. For securing your physical endpoints against rogue data exfiltration, implementing robust port-blocking software is mandatory. For individual professionals and travelers wanting to secure their files effortlessly across different computers, we strongly advise using portable encryption software that operates independently of host administrative rights.</p></div>
+
+<div style="margin-top: 2rem; display: flex; gap: 16px; justify-content: center;">
+<a class="btn-filled" href="https://www.softlay.com/downloads/usb-secure" rel="noopener noreferrer" target="_blank">Explore USB Secure →</a>
+<a class="btn-outline" href="https://aimultiple.com/de/free-usb-blocking-software" rel="noopener noreferrer" target="_blank">Explore USB Block →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="site-footer">
+<div class="container-wide">
+<div class="footer-grid">
+<div>
+<div class="footer-brand">
+<span aria-hidden="true" class="brand-mark">
+<svg focusable="false" role="img" viewbox="0 0 48 48">
+<path class="brand-shield" d="M24 4 40 10v12c0 10.2-6.8 17.8-16 22C14.8 39.8 8 32.2 8 22V10L24 4Z"></path>
+<path class="brand-bolt" d="M26.8 11 17 25h6.2L21.2 37 31 21h-6.4L26.8 11Z"></path>
+</svg>
+</span>
+<span class="brand-text">Secure Drive Hub</span>
+</div>
+<p>The definitive editorial guide to portable data protection.</p>
+</div>
+<div>
+<span class="ui-label" style="color:#7f95a8">Guides</span><br/>
+<a href="#methods">Compare Methods</a><br/>
+<a href="#guide">How to Encrypt</a><br/>
+<a href="#threats">Threat Models</a>
+</div>
+<div>
+<span class="ui-label" style="color:#7f95a8">Legal</span><br/>
+<a href="#">Privacy Policy</a><br/>
+<a href="#">Terms of Use</a><br/>
+<a href="#">Editorial Policy</a>
+</div>
+</div>
+<div class="footer-disclosure">
+<p>This site operates as an independent editorial resource. Some links may earn a referral commission at no cost to you. Product recommendations reflect editorial judgment and independent assessment.</p>
+<p style="margin-top: 1rem;">USB Secure and USB Block are developed by <a href="https://www.newsoftwares.net/" rel="noopener noreferrer" target="_blank">NewSoftwares.net</a>.</p>
+<p style="margin-top: 0.5rem;">© 2026 SecureDriveHub.</p>
+</div>
+</div>
+</footer>
+<!-- JS Logic -->
+<script defer="">
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            if(menuToggle && mainNav) {
+                menuToggle.addEventListener('click', () => {
+                    mainNav.classList.toggle('active');
+                });
+            }
+
+            // Smooth Scroll (Fallback via JS for older browsers)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#' || !targetId.startsWith('#')) return;
+
+                    const targetEl = document.querySelector(targetId);
+                    if (targetEl) {
+                        e.preventDefault();
+                        targetEl.scrollIntoView({ behavior: 'smooth' });
+                        if(mainNav && mainNav.classList.contains('active')) mainNav.classList.remove('active');
+                    }
+                });
+            });
+
+            // HERO SPLIT SHIFT: divider follows cursor horizontally at 30% speed, clamped to +/- 8%.
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.addEventListener('mousemove', (event) => {
+                    if (window.matchMedia('(max-width: 980px)').matches) return;
+                    const rect = hero.getBoundingClientRect();
+                    const xPercent = ((event.clientX - rect.left) / rect.width) * 100;
+                    const shifted = 50 + ((xPercent - 50) * 0.3);
+                    const clamped = Math.max(42, Math.min(58, shifted));
+                    hero.style.setProperty('--split', clamped + '%');
+                });
+                hero.addEventListener('mouseleave', () => {
+                    hero.style.setProperty('--split', '50%');
+                });
+            }
+
+            // WORD SPLIT ENTRANCE: split H2 words into two translating halves.
+            const splitHeading = (heading) => {
+                if (heading.dataset.splitReady === 'true') return;
+                const text = heading.textContent.trim();
+                if (!text) return;
+                heading.textContent = '';
+                text.split(/\s+/).forEach((word, index) => {
+                    const mid = Math.ceil(word.length / 2);
+                    const wrap = document.createElement('span');
+                    wrap.className = 'word-split';
+                    wrap.style.transitionDelay = (index * 35) + 'ms';
+
+                    const left = document.createElement('span');
+                    left.className = 'half half-left';
+                    left.textContent = word.slice(0, mid);
+
+                    const right = document.createElement('span');
+                    right.className = 'half half-right';
+                    right.textContent = word.slice(mid);
+
+                    wrap.append(left, right);
+                    heading.appendChild(wrap);
+                });
+                heading.dataset.splitReady = 'true';
+            };
+            document.querySelectorAll('main h2').forEach(splitHeading);
+
+            // SCROLL COLOR SHIFT / reveal trigger.
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, { threshold: 0.16 });
+            document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+            // Signature contrast band: wrap existing final-verdict words without changing text.
+            const bandParagraph = document.querySelector('.contrast-band p');
+            if (bandParagraph && bandParagraph.dataset.bandReady !== 'true') {
+                const raw = bandParagraph.textContent.trim().split(/\s+/);
+                bandParagraph.textContent = '';
+                raw.forEach(word => {
+                    const span = document.createElement('span');
+                    span.className = 'band-word';
+                    span.textContent = word;
+                    bandParagraph.appendChild(span);
+                });
+                bandParagraph.dataset.bandReady = 'true';
+            }
+
+            // Intent Selector Widget
+            const intentBtns = document.querySelectorAll('.intent-btn');
+            intentBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    intentBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.intent-content').forEach(c => c.classList.remove('active'));
+
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    const target = document.getElementById(targetId);
+                    if (target) target.classList.add('active');
+                });
+            });
+
+            // Risk Assessment Quiz
+            const btnQuiz = document.getElementById('btn-quiz');
+            if(btnQuiz) {
+                btnQuiz.addEventListener('click', () => {
+                    const q1 = document.querySelector('input[name="q1"]:checked');
+                    const q2 = document.querySelector('input[name="q2"]:checked');
+                    const resDiv = document.getElementById('quiz-result');
+
+                    if(!q1 || !q2) {
+                        resDiv.style.display = 'block';
+                        resDiv.style.background = '#F5E642';
+                        resDiv.style.color = '#0A0A0A';
+                        resDiv.textContent = 'Please answer all questions.';
+                        return;
+                    }
+
+                    let score = 0;
+                    if(q1.value === 'high') score++;
+                    if(q2.value === 'high') score++;
+
+                    resDiv.style.display = 'block';
+                    if(score === 2) {
+                        resDiv.style.background = '#0A0A0A';
+                        resDiv.style.color = '#F5E642';
+                        resDiv.textContent = 'High Risk: Your USB practices leave you vulnerable to data loss and malware. Implement software encryption and port control immediately.';
+                    } else if (score === 1) {
+                        resDiv.style.background = '#F5E642';
+                        resDiv.style.color = '#0A0A0A';
+                        resDiv.textContent = 'Moderate Risk: You have some good habits, but glaring vulnerabilities exist in endpoint verification. Review the threat model above.';
+                    } else {
+                        resDiv.style.background = '#FAFAFA';
+                        resDiv.style.color = '#0A0A0A';
+                        resDiv.textContent = 'Low Risk: Excellent. Your habits indicate a strong awareness of USB endpoint security.';
+                    }
+                });
+            }
+
+            // Pricing Builder Logic
+            const checks = document.querySelectorAll('.price-check');
+            const pBadge = document.getElementById('plan-badge');
+            const pTitle = document.getElementById('plan-title');
+            const pDesc = document.getElementById('plan-desc');
+            const pCta = document.getElementById('plan-cta');
+
+            checks.forEach(check => {
+                check.addEventListener('change', () => {
+                    let needsPaid = false;
+                    checks.forEach(c => { if(c.checked && c.getAttribute('data-tier') === 'paid') needsPaid = true; });
+
+                    if(needsPaid) {
+                        pBadge.textContent = 'Pro Version';
+                        pTitle.textContent = 'Full Protection';
+                        pDesc.textContent = 'Required for permanent operational security, stealth modes, and uninterrupted access.';
+                        pCta.textContent = 'View Full Pricing';
+                        pCta.href = 'https://store.newsoftwares.net/';
+                        pCta.setAttribute('target', '_blank');
+                        pCta.setAttribute('rel', 'noopener noreferrer');
+                        pCta.classList.replace('btn-outline', 'btn-filled');
+                    } else {
+                        pBadge.textContent = 'Trial Version';
+                        pTitle.textContent = 'Evaluation Access';
+                        pDesc.textContent = 'Ideal for testing the workflow and ensuring compatibility with your devices.';
+                        pCta.textContent = 'Download Free';
+                        pCta.href = 'https://www.softlay.com/downloads/usb-secure';
+                        pCta.setAttribute('target', '_blank');
+                        pCta.setAttribute('rel', 'noopener noreferrer');
+                        pCta.classList.replace('btn-filled', 'btn-outline');
+                    }
+                });
+            });
+
+            // FAQ Filter Logic
+            const filterBtns = document.querySelectorAll('.faq-filter');
+            const faqCards = document.querySelectorAll('.faq-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filter = btn.getAttribute('data-filter');
+                    faqCards.forEach(card => {
+                        if(filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        });
+
+</script>
+<!-- SCHEMA JSON-LD -->
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "name": "SecureDriveHub",
+          "description": "The complete editorial guide to USB flash drive security.",
+          "publisher": {
+            "@type": "Organization",
+            "name": "NewSoftwares.net"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "name": "USB Flash Drive Security — Best Practices and Risks",
+          "description": "A complete guide to USB flash drive security risks, best practices, encryption methods, and threat prevention."
+        },
+        {
+          "@type": "Article",
+          "headline": "USB Flash Drive Security — Best Practices and Risks",
+          "author": {
+            "@type": "Organization",
+            "name": "SecureDriveHub Editorial Team"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "NewSoftwares.net"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "USB Secure",
+          "applicationCategory": "SecurityApplication",
+          "operatingSystem": "Windows",
+          "offers": {
+            "@type": "Offer",
+            "price": "39.95",
+            "priceCurrency": "USD"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What are the security risks of USB flash drives?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The primary risks include data theft via physical loss, rogue data exfiltration to unrecognized mediums, and BadUSB hardware spoofing attacks."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do I need administrator rights to open an encrypted flash drive on a public computer?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Specialized portable apps operate independently, allowing you to authenticate and access your files on public or restricted machines without needing host admin credentials."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I view my locked files without fully decrypting the entire drive?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, if you use software that supports virtual drive mounting. Instead of decrypting the entire physical volume, the software creates a temporary, secure virtual environment to interact with files safely."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Security Guides"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "USB Flash Drive Security"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+</body>
+</html>
